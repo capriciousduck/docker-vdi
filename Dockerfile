@@ -1,12 +1,12 @@
-FROM ubuntu:18.04 as vdi_base
+FROM zepheus/baseimage-docker as vdi_base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Configure timezone and locale to spanish and America/Bogota timezone. Change locale and timezone to whatever you want
-ENV LANG="de_DE.UTF-8"
-ENV LANGUAGE=de_DE
-ENV KEYMAP="de"
-ENV TIMEZONE="Europe/Berlin"
+ENV LANG="en_US.UTF-8"
+ENV LANGUAGE=en_US
+ENV KEYMAP="en"
+ENV TIMEZONE="Asia/Kolkata"
 #ENV DESKTOP="mate-desktop-environment-extras"
 ENV DESKTOP="xfce4"
 
@@ -38,7 +38,7 @@ RUN apt-get clean && apt-get update && apt-get install -y locales apt-utils && \
 # RUN add-apt-repository ppa:webupd8team/tor-browser && apt-get update -y && \
 	# apt-get install -y aptitude tor firefox libreoffice htop nano git vim tor-browser iftop chromium-browser keepassx sshfs encfs terminator nmap tig mtr && \
 
-RUN	apt-get update && apt-get install -y chromium-browser firefox torbrowser-launcher && \
+RUN	apt-get update && apt-get install -y fuse snapd chromium-browser firefox torbrowser-launcher && \
 	# Clean up APT when done.
 	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -62,7 +62,7 @@ FROM vdi_base as vdi
 #ENV NOMACHINE_MD5 d697e5a565507d522380c94d2f295d0
 
 # Free - lastest
-ENV NOMACHINE_PACKAGE_NAME nomachine_6.5.6_9_amd64.deb
+ENV NOMACHINE_PACKAGE_NAME nomachine_7.6.2_4_amd64.deb
 # ENV NOMACHINE_MD5 8fc4b0a467eff56f662f348c7e03c6ec
 
 # Enterprise
@@ -90,10 +90,12 @@ RUN	dpkg -i /nomachine.deb && \
 ADD ./configs/server.cfg /usr/NX/etc/server.cfg
 ADD ./configs/node.cfg /usr/NX/etc/node.cfg
 ## keyboard-layout
-ADD ./configs/bash_profile /home/user/.bash_profile
+#ADD ./configs/bash_profile /home/user/.bash_profile
 ## Desktop config
-ADD ./configs/xfce4 /home/user/.config/xfce4
+#ADD ./configs/xfce4 /home/user/.config/xfce4
 
+ENV USER=admin
+ENV PASSWORD=password
 
 ADD nxserver.sh /
 
